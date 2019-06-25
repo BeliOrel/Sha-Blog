@@ -1,0 +1,4 @@
+$ mkdir Sha_Blog
+$ cd Sha_Blog/
+$ export FLASK_APP=shablog.py
+$ flask run   <- run server
