@@ -2,3 +2,6 @@ $ mkdir Sha_Blog
 $ cd Sha_Blog/
 $ export FLASK_APP=shablog.py
 $ flask run   <- run server
+
+With this there's no need to restart server every time we make a change in our code:
+$ export FLASK_DEBUG=1
