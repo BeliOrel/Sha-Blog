@@ -5,3 +5,10 @@ $ flask run   <- run server
 
 With this there's no need to restart server every time we make a change in our code:
 $ export FLASK_DEBUG=1
+
+Manually generate secret API key:
+$ python
+>>> import secrets
+>>> secrets.token_hex(16)
+'4cb195a017b7d117311173f6d1635375'
+>>> exit()
