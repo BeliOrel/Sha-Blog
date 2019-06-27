@@ -72,4 +72,14 @@ User('Corey', 'co@email.com', 'default.jpg')
 []
 >>> Post.query.all()
 []
->>> exit()                
+>>> exit()         
+
+After reorganizing the structure of project
+$ python
+>>> from shablog import db
+>>> from shablog.models import User, Post
+>>> db.create_all()
+>>> User.query.all()
+[]
+>>> exit()
+       
