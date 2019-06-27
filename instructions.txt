@@ -12,3 +12,64 @@ $ python
 >>> secrets.token_hex(16)
 '4cb195a017b7d117311173f6d1635375'
 >>> exit()
+
+Install database
+$ pip install flask-sqlalchemy
+
+Insert data to DB
+$ python
+>>> from shablog import db
+>>> db.create_all() -> this creates db file in the project
+>>> from shablog import User, Post
+>>> user_1 = User(username='Corey', email='co@email.com', password='password')
+>>> db.session.add(user_1)
+>>> user_2 = User(username='Mei', email='mei@email.com', password='password')
+>>> db.session.add(user_2)
+>>> db.session.commit()
+>>> User.query.all() -> list of all users
+[User('Corey', 'co@email.com', 'default.jpg'), User('Mei', 'mei
+')]                                                            
+>>> User.query.first()                                         
+User('Corey', 'co@email.com', 'default.jpg')                   
+>>> User.query.filter_by(username='Corey').all()               
+[User('Corey', 'co@email.com', 'default.jpg')]                 
+>>> User.query.filter_by(username='Corey').first()             
+User('Corey', 'co@email.com', 'default.jpg')                   
+>>> user = User.query.filter_by(username='Corey').first()      
+>>> user                                                       
+User('Corey', 'co@email.com', 'default.jpg')                   
+>>> user.id                                                    
+1                                                              
+>>> user = User.query.get(1)                                   
+>>> user                                                       
+User('Corey', 'co@email.com', 'default.jpg') 
+>>> user.post
+[]
+>>> post_1 = Post(title='Post 1', content='First post content.', user_id=user.id)
+>>> post_1
+User('Post 1', 'None')
+>>> post_2 = Post(title='Post 2', content='Second post content.', user_id=user.id)
+>>> db.session.add(post_1)
+>>> db.session.add(post_2)
+>>> db.session.commit()  
+>>> user.post
+[User('Post 1', '2019-06-27 20:22:38.768658'), User('Post 2', '2019-06-27 20:22:38.772658')]
+>>> for post in user.post:
+...     print(post.title)
+...
+Post 1
+Post 2
+>>> post = Post.query.first()
+>>> post
+User('Post 1', '2019-06-27 20:22:38.768658')
+>>> post.user_id
+1
+>>> post.author
+User('Corey', 'co@email.com', 'default.jpg')
+>>> db.drop_all()  -> destroy database
+>>> db.create_all()
+>>> User.query.all()
+[]
+>>> Post.query.all()
+[]
+>>> exit()                
