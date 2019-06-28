@@ -74,7 +74,7 @@ User('Corey', 'co@email.com', 'default.jpg')
 []
 >>> exit()         
 
-After reorganizing the structure of project
+After reorganizing the structure of the project
 $ python
 >>> from shablog import db
 >>> from shablog.models import User, Post
@@ -82,4 +82,39 @@ $ python
 >>> User.query.all()
 []
 >>> exit()
-       
+
+Now (after reorganizing the content) you can run the project with:
+$ python run.py
+
+Hash password:
+$ pip install flask-bcrypt
+$ python
+>>> from flask_bcrypt import Bcrypt
+>>> bcrypt = Bcrypt()
+>>> bcrypt.generate_password_hash('testing')
+b'$2b$12$X5XOpOrf9YngqrqRiKtO9O3FCo1h1IQen2ED0KXuugHUvR9YrJhmW'
+>>> bcrypt.generate_password_hash('testing').decode('utf-8')
+'$2b$12$p/3FQCYYs2SHmh6ywNZobONTjDIRGmbKIJKr5VhiQ9yWJbT.6DwxK'
+>>> bcrypt.generate_password_hash('testing').decode('utf-8')
+'$2b$12$j/pyzTy83ba2vMpQaWji2On4fzkNHgJsdnJesz3nlMfYAwTrowqQy'
+>>> hash_pw = bcrypt.generate_password_hash('testing').decode('utf-8')
+>>> bcrypt.check_password_hash(hash_pw, 'password')
+False
+>>> bcrypt.check_password_hash(hash_pw, 'testing')
+True
+>>> exit()
+
+After connecting project with database, check if it still works as intended:
+$ python
+>>> from shablog import db
+>>> from shablog.models import User
+>>> user = User.query.first()
+>>> user
+User('sha', 'sha@email.com', 'default.jpg')
+>>> user.password
+'$2b$12$55NwJ0EOQFIk4pcCMc9BG.M6A77bY.MnshFR7b91bE5zxlRnaI5E.'
+>>> exit()
+
+For Log In (flask-login provides user session management):
+$ pip install flask-login
+
