@@ -1,7 +1,11 @@
+import os
+import secrets # for picture's name
+from PIL import Image
 from flask import render_template, url_for, flash, redirect, request
 # so we can use routes, DB and bcrypt -> @app
 from shablog import app, db, bcrypt
-from shablog.forms import RegistrationForm, LoginForm
+from shablog.constants import PATH_PROFILE_PICTURE, DEFAULT_PROFILE_PICTURE
+from shablog.forms import RegistrationForm, LoginForm, UpdateAccount
 from shablog.models import User, Post
 from flask_login import login_user, current_user, logout_user, login_required
 
@@ -73,7 +77,55 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route("/account")
+
+def save_picture(form_picture):
+    rand_hex = secrets.token_hex(8)
+    f_name, f_ext = os.path.splitext(form_picture.filename)
+    picture_file_name = rand_hex + f_ext
+    picture_path = os.path.join(app.root_path, PATH_PROFILE_PICTURE, picture_file_name)
+
+    output_size = (125, 125)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+
+    i.save(picture_path)
+    return picture_file_name
+
+
+@app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html', title='Account')
+    form = UpdateAccount()
+    if form.validate_on_submit():
+        # picture is not required
+        if form.picture.data:
+            # check if default profile picture
+            if current_user.image_file != DEFAULT_PROFILE_PICTURE:              
+                # remove old profile image
+                try:
+                    old_picture_path = os.path.join(app.root_path, PATH_PROFILE_PICTURE, current_user.image_file)
+                    # remove old picture from file system
+                    os.remove(old_picture_path)
+                except Exception as e:
+                    print(f'Exception: {e}')
+                    flash('Something went wrong when updating the profile picture!', 'danger')
+                    current_user.image_file = DEFAULT_PROFILE_PICTURE
+                    return redirect(url_for('account'))
+
+            # new profile picture
+            picture_file = save_picture(form.picture.data)
+            current_user.image_file = picture_file
+                
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        # it's better to use redirect here
+        # so we don't get the message in browser
+        # if we want to reload page
+        return redirect(url_for('account'))
+    # when loading page -> fill form with current data
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    image_file = url_for('static', filename='profile_pics/'+current_user.image_file)
+    return render_template('account.html', title='Account', image_file=image_file, form=form)

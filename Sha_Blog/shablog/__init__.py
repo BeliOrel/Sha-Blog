@@ -2,12 +2,13 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
+from shablog.constants import SQLALCHEMY_DATABASE_URI
 
 app = Flask(__name__)
 
 # secret key for aplication, so nobody can modify form data
 app.config['SECRET_KEY'] = '4cb195a017b7d117311173f6d1635375'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
 # DB instance
 db = SQLAlchemy(app)

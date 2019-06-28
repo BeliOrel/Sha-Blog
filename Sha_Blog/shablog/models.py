@@ -1,6 +1,7 @@
 from datetime import datetime 
 from shablog import db, login_manager
 from flask_login import UserMixin
+from shablog.constants import DEFAULT_PROFILE_PICTURE
 
 
 @login_manager.user_loader
@@ -14,7 +15,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    image_file = db.Column(db.String(20), nullable=False, default=DEFAULT_PROFILE_PICTURE)
     password = db.Column(db.String(60), nullable=False)
     # relationship -> user(author) : post = 1 : n
     post = db.relationship('Post', backref='author', lazy=True)
