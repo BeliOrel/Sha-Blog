@@ -118,3 +118,73 @@ User('sha', 'sha@email.com', 'default.jpg')
 For Log In (flask-login provides user session management):
 $ pip install flask-login
 
+Pagination (testing):
+$ python
+>>> from shablog.models import Post
+>>> posts = Post.query.all()
+>>> print(posts)
+>>> posts = Post.query.paginate()
+>>> posts
+<flask_sqlalchemy.Pagination object at 0x000002031B351048>
+>>> dir(posts)
+['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'has_next', 'has_prev', 'items', 'iter_pages', 'next', 'next_num', 'page', 'pages', 'per_page', 'prev', 'prev_num', 'query', 'total']
+>>> posts.per_page
+20
+>>> posts.page
+1
+>>> for post in posts.items:
+...     print(post)
+...
+User('Judging Yourself', '2019-06-30 14:04:29.439792')
+User('When You’re Trying to Figure out your Life Remember …', '2019-06-30 14:25:12.592832')
+User('Proposal', '2019-06-30 14:40:51.505953')
+User('NGC 1499: The California Nebula', '2019-06-30 16:06:01.200102')
+User('Top 5 Programming Lanaguages', '2019-06-30 17:12:16.823189')
+User('You Won't Believe These Clickbait Titles!', '2019-06-30 17:12:44.797094')
+User('How Dogs in the Workplace Boosts Productivity', '2019-06-30 17:13:08.533443')
+User('Music To Listen To While Coding', '2019-06-30 17:13:57.961010')
+User('5 Tips for Writing Catchy Headlines', '2019-06-30 17:14:19.729510')
+User('Chapter 1: A Dreadful Night', '2019-06-30 17:17:36.548404')
+User('The Scum Villain’s Self-Saving System', '2019-06-30 17:21:30.569367')
+User('Extras', '2019-06-30 17:22:08.911297')
+>>> posts = Post.query.paginate(per_page=4)
+>>> posts.page
+1
+>>> for post in posts.items:
+...     print(post)
+...
+User('Judging Yourself', '2019-06-30 14:04:29.439792')
+User('When You’re Trying to Figure out your Life Remember …', '2019-06-30 14:25:12.592832')
+User('Proposal', '2019-06-30 14:40:51.505953')
+User('NGC 1499: The California Nebula', '2019-06-30 16:06:01.200102')
+>>> posts = Post.query.paginate(per_page=4, page=2)
+>>> for post in posts.items:
+...     print(post)
+...
+User('Top 5 Programming Lanaguages', '2019-06-30 17:12:16.823189')
+User('You Won't Believe These Clickbait Titles!', '2019-06-30 17:12:44.797094')
+User('How Dogs in the Workplace Boosts Productivity', '2019-06-30 17:13:08.533443')
+User('Music To Listen To While Coding', '2019-06-30 17:13:57.961010')
+>>> posts.page
+2
+>>> posts.total
+12
+>>> posts = Post.query.paginate(per_page=2, page=6)
+>>> for page in posts.iter_pages():
+...     print(page)
+...
+1
+2
+None
+4
+5
+6
+>>> exit()
+
+
+
+
+
+
+
+
