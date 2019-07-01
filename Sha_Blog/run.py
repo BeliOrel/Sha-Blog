@@ -1,4 +1,6 @@
-from shablog import app
+from shablog import create_app
+
+app = create_app()
 
 # if we don't want to use environment variables
 # for a debug mode, we can also write
