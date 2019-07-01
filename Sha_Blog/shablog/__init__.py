@@ -37,9 +37,11 @@ def create_app(config_class=Config):
     from shablog.users.routes import users
     from shablog.posts.routes import posts
     from shablog.main.routes import main
+    from shablog.errors.handlers import errors
 
     app.register_blueprint(users)
     app.register_blueprint(posts)
     app.register_blueprint(main)
+    app.register_blueprint(errors)
 
     return app
