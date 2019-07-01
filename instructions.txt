@@ -181,6 +181,21 @@ None
 6
 >>> exit()
 
+Tokens (used for emails):
+$ python
+>>> from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+>>> s = Serializer('secret', 30)
+>>> token = s.dumps({'user_id': 1}).decode('utf-8')
+>>> token
+'eyJhbGciOiJIUzUxMiIsImlhdCI6MTU2MTkzNTgwNCwiZXhwIjoxNTYxOTM1ODM0fQ.eyJ1c2VyX2lkIjoxfQ.RQoZ-5Z5uSBHQZcThX7OW-hdLq09iN_PSZ3i5AxnObVVoAwflWz_zGQ490TCquTQ0Q2VYckwP0nMpFtd9QiLVg'
+>>> s.loads(token)
+{'user_id': 1}
+>>> s.loads(token)  <- after we wait at least 30s
+itsdangerous.exc.SignatureExpired: Signature expired
+>>> exit()
+
+Install package for using email:
+$ pip install flask-mail 
 
 
 
